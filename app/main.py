@@ -1,12 +1,14 @@
 import uuid
 from pathlib import Path
+from typing import Annotated
 
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI, Form, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
+from app.data import REQUIRED_QUESTION_COUNT
 from app.game_service import GameSession, get_session
 from app.models import GameState
 
@@ -32,14 +34,37 @@ async def home(request: Request) -> Response:
     return templates.TemplateResponse(
         request,
         "home.html",
-        {"session": session, "GameState": GameState},
+        {
+            "session": session,
+            "GameState": GameState,
+            "required_question_count": REQUIRED_QUESTION_COUNT,
+        },
+    )
+
+
+@app.get("/customize", response_class=HTMLResponse)
+async def customize_quiz(request: Request) -> Response:
+    session = _get_game_session(request)
+    session.enter_customize()
+    return templates.TemplateResponse(
+        request,
+        "components/customize_screen.html",
+        {"session": session, "required_question_count": REQUIRED_QUESTION_COUNT},
     )
 
 
 @app.post("/start", response_class=HTMLResponse)
-async def start_game(request: Request) -> Response:
+async def start_game(
+    request: Request, custom_questions: Annotated[str, Form()] = ""
+) -> Response:
     session = _get_game_session(request)
-    session.start_game()
+    session.start_game(custom_questions)
+    if session.game_state == GameState.CUSTOMIZE:
+        return templates.TemplateResponse(
+            request,
+            "components/customize_screen.html",
+            {"session": session, "required_question_count": REQUIRED_QUESTION_COUNT},
+        )
     return templates.TemplateResponse(
         request, "components/game_screen.html", {"session": session}
     )

@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from app.data import REQUIRED_QUESTION_COUNT
 from app.main import app
 
 
@@ -68,3 +69,79 @@ class TestDismissModal:
         response = client.post("/dismiss-modal")
         assert response.status_code == 200
         assert "FREE SPACE" in response.text
+
+
+class TestCustomizeQuiz:
+    def test_customize_returns_customize_screen(self, client: TestClient):
+        client.get("/")
+        response = client.get("/customize")
+        assert response.status_code == 200
+        assert "Custom" in response.text
+        assert "Start with My Questions" in response.text
+
+    def test_start_with_valid_custom_questions_uses_them(self, client: TestClient):
+        client.get("/")
+        custom_questions = "\n".join(
+            f"custom question {i}" for i in range(REQUIRED_QUESTION_COUNT)
+        )
+        response = client.post("/start", data={"custom_questions": custom_questions})
+        assert response.status_code == 200
+        assert "custom question 0" in response.text
+        assert "FREE SPACE" in response.text
+        assert "CUSTOM QUIZ" in response.text
+
+    def test_start_with_too_few_custom_questions_shows_errors(
+        self, client: TestClient
+    ):
+        client.get("/")
+        response = client.post(
+            "/start", data={"custom_questions": "only one question"}
+        )
+        assert response.status_code == 200
+        assert "Start with My Questions" in response.text  # back on customize screen
+        assert "at least" in response.text
+        assert "only one question" in response.text  # preserves user's input
+
+    def test_start_with_malformed_whitespace_only_falls_back_to_default(
+        self, client: TestClient
+    ):
+        client.get("/")
+        response = client.post("/start", data={"custom_questions": "   \n\n  "})
+        assert response.status_code == 200
+        assert "← Back" in response.text
+        assert "FREE SPACE" in response.text
+        assert "CUSTOM QUIZ" not in response.text
+
+    def test_start_without_custom_questions_is_backward_compatible(
+        self, client: TestClient
+    ):
+        client.get("/")
+        response = client.post("/start")
+        assert response.status_code == 200
+        assert "FREE SPACE" in response.text
+        assert "← Back" in response.text
+        assert "CUSTOM QUIZ" not in response.text
+
+    def test_use_default_button_ignores_pending_custom_input(
+        self, client: TestClient
+    ):
+        client.get("/")
+        client.get("/customize")
+        response = client.post("/start", data={"custom_questions": ""})
+        assert response.status_code == 200
+        assert "FREE SPACE" in response.text
+        assert "CUSTOM QUIZ" not in response.text
+
+    def test_reset_clears_custom_quiz_state(self, client: TestClient):
+        client.get("/")
+        custom_questions = "\n".join(
+            f"custom question {i}" for i in range(REQUIRED_QUESTION_COUNT)
+        )
+        client.post("/start", data={"custom_questions": custom_questions})
+        response = client.post("/reset")
+        assert response.status_code == 200
+        assert "Start Game" in response.text
+        # Starting again without customization should use the default bank.
+        follow_up = client.post("/start")
+        assert "custom question 0" not in follow_up.text
+        assert "CUSTOM QUIZ" not in follow_up.text
