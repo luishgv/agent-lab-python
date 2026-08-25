@@ -1,32 +1,48 @@
 <div id="game-container">
-    <main class="landing-shell">
-        <div class="landing-noise" aria-hidden="true"></div>
-        <div class="landing-inner">
-            <header class="brand-lockup reveal reveal-one">
-                <span class="brand-mark">SO</span>
-                <span class="brand-label">SOC OPS / SOCIAL BINGO</span>
+    <main class="briefing-shell">
+        <div class="briefing-grid" aria-hidden="true"></div>
+        <div class="briefing-frame">
+            <header class="briefing-topbar brief-reveal brief-reveal-one">
+                <span class="briefing-chip">MISSION FILE / SOCIAL BINGO</span>
+                <span class="briefing-chip briefing-chip--status"><i class="briefing-dot" aria-hidden="true"></i>ROOM ACTIVE</span>
             </header>
 
-            <section class="landing-hero reveal reveal-two">
-                <p class="eyebrow">A room full of possibilities</p>
-                <h1>Find your<br><em>people.</em></h1>
-                <p class="hero-copy">A pocket-sized icebreaker for making real connections, one square at a time.</p>
+            <section class="briefing-hero brief-reveal brief-reveal-two">
+                <p class="briefing-kicker">Icebreaker briefing</p>
+                <h1 class="briefing-title">Soc Ops</h1>
+                <p class="briefing-sub">Meet the room, one square at a time. Find your people before the round is up.</p>
             </section>
 
-            <div class="landing-rule reveal reveal-three"><span>HOW TO PLAY</span><span class="rule-line"></span><span>01 / 03</span></div>
-            <section class="how-to-panel reveal reveal-three" aria-labelledby="how-to-title">
-                <h2 id="how-to-title">How to play</h2>
-                <ol>
-                    <li><span>01</span><strong>Spot a match</strong><small>Find someone who fits a square.</small></li>
-                    <li><span>02</span><strong>Make a connection</strong><small>Ask, listen, and tap it in.</small></li>
-                    <li><span>03</span><strong>Claim your line</strong><small>Five in a row means bingo.</small></li>
-                </ol>
-            </section>
+            <div class="briefing-columns">
+                <section class="briefing-steps brief-reveal brief-reveal-three" aria-labelledby="how-to-title">
+                    <div class="briefing-steps-head">
+                        <h2 id="how-to-title">How to play</h2>
+                        <span class="briefing-steps-tag">3 STEPS</span>
+                    </div>
+                    <ol class="briefing-steps-list">
+                        <li>
+                            <span class="briefing-step-num">01</span>
+                            <div><strong>Scan the board</strong><small>Pick a square, find who fits it.</small></div>
+                        </li>
+                        <li>
+                            <span class="briefing-step-num">02</span>
+                            <div><strong>Make contact</strong><small>Ask around, listen, confirm the match.</small></div>
+                        </li>
+                        <li>
+                            <span class="briefing-step-num">03</span>
+                            <div><strong>Call it in</strong><small>Five squares in a row means bingo.</small></div>
+                        </li>
+                    </ol>
+                </section>
 
-            <button hx-post="/start" hx-target="#game-container" hx-swap="outerHTML" class="arcade-cta reveal reveal-four">
-                <span>Start Game</span><b aria-hidden="true">↗</b>
-            </button>
-            <p class="landing-footnote reveal reveal-four">Built for curious rooms &amp; unexpected conversations.</p>
+                <aside class="briefing-action brief-reveal brief-reveal-four">
+                    <button hx-post="/start" hx-target="#game-container" hx-swap="outerHTML" class="briefing-cta">
+                        <span>Start Game</span>
+                        <span class="briefing-cta-icon" aria-hidden="true">&rarr;</span>
+                    </button>
+                    <p class="briefing-footnote">Fresh board every round &middot; no prep needed</p>
+                </aside>
+            </div>
         </div>
     </main>
 </div>

@@ -1,25 +1,51 @@
 <div id="game-container">
-<div class="flex flex-col items-center justify-center min-h-full p-6 bg-gray-50">
-    <div class="text-center max-w-sm">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">Soc Ops</h1>
-        <p class="text-lg text-gray-600 mb-8">Social Bingo</p>
+<div class="briefing-shell">
+    <div class="briefing-frame">
+        <header class="briefing-topbar">
+            <span class="briefing-chip">MISSION FILE / SOCIAL BINGO</span>
+            <span class="briefing-chip briefing-chip--status"><i class="briefing-dot" aria-hidden="true"></i>ROOM ACTIVE</span>
+        </header>
 
-        <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200 mb-8">
-            <h2 class="font-semibold text-gray-800 mb-3">How to play</h2>
-            <ul class="text-left text-gray-600 text-sm space-y-2">
-                <li>• Find people who match the questions</li>
-                <li>• Tap a square when you find a match</li>
-                <li>• Get 5 in a row to win!</li>
-            </ul>
+        <section class="briefing-hero">
+            <p class="briefing-kicker">Icebreaker briefing</p>
+            <h1 class="briefing-title">Soc Ops</h1>
+            <p class="briefing-sub">Meet the room, one square at a time. Find your people before the round is up.</p>
+        </section>
+
+        <div class="briefing-columns">
+            <section class="briefing-steps" aria-labelledby="how-to-title">
+                <div class="briefing-steps-head">
+                    <h2 id="how-to-title">How to play</h2>
+                    <span class="briefing-steps-tag">3 STEPS</span>
+                </div>
+                <ol class="briefing-steps-list">
+                    <li>
+                        <span class="briefing-step-num">01</span>
+                        <div><strong>Scan the board</strong><small>Pick a square, find who fits it.</small></div>
+                    </li>
+                    <li>
+                        <span class="briefing-step-num">02</span>
+                        <div><strong>Make contact</strong><small>Ask around, listen, confirm the match.</small></div>
+                    </li>
+                    <li>
+                        <span class="briefing-step-num">03</span>
+                        <div><strong>Call it in</strong><small>Five squares in a row means bingo.</small></div>
+                    </li>
+                </ol>
+            </section>
+
+            <aside class="briefing-action">
+                <button
+                    hx-post="/start"
+                    hx-target="#game-container"
+                    hx-swap="outerHTML"
+                    class="briefing-cta">
+                    <span>Start Game</span>
+                    <span class="briefing-cta-icon" aria-hidden="true">&rarr;</span>
+                </button>
+                <p class="briefing-footnote">Fresh board every round &middot; no prep needed</p>
+            </aside>
         </div>
-
-        <button
-            hx-post="/start"
-            hx-target="#game-container"
-            hx-swap="outerHTML"
-            class="w-full bg-accent text-white font-semibold py-4 px-8 rounded-lg text-lg active:bg-accent-light transition-colors">
-            Start Game
-        </button>
     </div>
 </div>
 </div>
