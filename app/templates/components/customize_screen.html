@@ -1,0 +1,41 @@
+<div id="game-container">
+    <main class="landing-shell">
+        <div class="landing-noise" aria-hidden="true"></div>
+        <div class="landing-inner">
+            <header class="brand-lockup reveal reveal-one">
+                <span class="brand-mark">SO</span>
+                <span class="brand-label">SOC OPS / SOCIAL BINGO</span>
+            </header>
+
+            <section class="landing-hero reveal reveal-two">
+                <p class="eyebrow">Make it yours</p>
+                <h1>Custom<br><em>Quiz.</em></h1>
+                <p class="hero-copy">Drop in your own icebreaker questions, one per line. You need at least {{ required_question_count }} unique questions to fill the board.</p>
+            </section>
+
+            {% if session.quiz_errors %}
+            <div class="quiz-errors reveal reveal-three" role="alert">
+                <ul>
+                    {% for error in session.quiz_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form hx-post="/start" hx-target="#game-container" hx-swap="outerHTML" class="quiz-form reveal reveal-three">
+                <textarea
+                    name="custom_questions"
+                    class="quiz-textarea"
+                    rows="10"
+                    aria-label="Custom questions, one per line"
+                    placeholder="has traveled to Japan&#10;can solve a Rubik's cube&#10;plays a musical instrument&#10;...">{{ session.pending_custom_input }}</textarea>
+                <div class="quiz-actions reveal reveal-four">
+                    <button type="submit" class="arcade-cta"><span>Start with My Questions</span><b aria-hidden="true">↗</b></button>
+                    <button type="button" hx-post="/start" hx-vals='{"custom_questions": ""}' hx-target="#game-container" hx-swap="outerHTML" class="back-button">Use Default Questions</button>
+                    <button type="button" hx-post="/reset" hx-target="#game-container" hx-swap="outerHTML" class="back-button">← Back</button>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>

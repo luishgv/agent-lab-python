@@ -1,10 +1,12 @@
-from app.data import FREE_SPACE, QUESTIONS
+from app.data import FREE_SPACE, MAX_QUESTION_LENGTH, QUESTIONS, REQUIRED_QUESTION_COUNT
 from app.game_logic import (
     CENTER_INDEX,
     check_bingo,
     generate_board,
     get_winning_square_ids,
+    parse_custom_questions,
     toggle_square,
+    validate_questions,
 )
 from app.models import BingoLine, BingoSquareData
 
@@ -132,3 +134,78 @@ class TestGetWinningSquareIds:
     def test_returns_square_ids(self):
         line = BingoLine(type="row", index=0, squares=[0, 1, 2, 3, 4])
         assert get_winning_square_ids(line) == {0, 1, 2, 3, 4}
+
+
+class TestParseCustomQuestions:
+    def test_splits_on_newlines_and_strips_whitespace(self):
+        raw = "  question one  \nquestion two\n"
+        assert parse_custom_questions(raw) == ["question one", "question two"]
+
+    def test_drops_blank_lines(self):
+        raw = "question one\n\n   \nquestion two"
+        assert parse_custom_questions(raw) == ["question one", "question two"]
+
+    def test_deduplicates_case_insensitively_preserving_first_occurrence(self):
+        raw = "Loves Pizza\nloves pizza\nLOVES PIZZA\nhas a dog"
+        assert parse_custom_questions(raw) == ["Loves Pizza", "has a dog"]
+
+    def test_empty_input_returns_empty_list(self):
+        assert parse_custom_questions("") == []
+        assert parse_custom_questions("   \n  \n") == []
+
+
+class TestValidateQuestions:
+    def test_valid_questions_return_no_errors(self):
+        questions = [
+            f"custom question number {i}" for i in range(REQUIRED_QUESTION_COUNT)
+        ]
+        assert validate_questions(questions) == []
+
+    def test_too_few_questions_returns_error(self):
+        questions = ["only one question"]
+        errors = validate_questions(questions)
+        assert len(errors) == 1
+        assert "at least" in errors[0]
+
+    def test_question_too_short_returns_error(self):
+        questions = [f"q{i}" for i in range(REQUIRED_QUESTION_COUNT)]
+        questions[0] = "ab"
+        errors = validate_questions(questions)
+        assert any("characters long" in e and "at least" in e for e in errors)
+
+    def test_question_too_long_returns_error(self):
+        questions = [
+            f"custom question number {i}" for i in range(REQUIRED_QUESTION_COUNT)
+        ]
+        questions[0] = "x" * (MAX_QUESTION_LENGTH + 1)
+        errors = validate_questions(questions)
+        assert any("at most" in e for e in errors)
+
+    def test_empty_list_returns_count_error_only(self):
+        errors = validate_questions([])
+        assert len(errors) == 1
+
+
+class TestGenerateBoardWithCustomQuestions:
+    def test_uses_custom_question_pool(self):
+        custom = [f"custom question {i}" for i in range(REQUIRED_QUESTION_COUNT)]
+        board = generate_board(custom)
+        texts = {s.text for s in board if not s.is_free_space}
+        assert texts.issubset(set(custom))
+        assert not texts.issubset(set(QUESTIONS))
+
+    def test_board_still_has_25_squares_and_free_space(self):
+        custom = [f"custom question {i}" for i in range(REQUIRED_QUESTION_COUNT)]
+        board = generate_board(custom)
+        assert len(board) == 25
+        assert board[CENTER_INDEX].is_free_space is True
+
+    def test_none_falls_back_to_default_pool(self):
+        board = generate_board(None)
+        texts = {s.text for s in board if not s.is_free_space}
+        assert texts.issubset(set(QUESTIONS))
+
+    def test_empty_list_falls_back_to_default_pool(self):
+        board = generate_board([])
+        texts = {s.text for s in board if not s.is_free_space}
+        assert texts.issubset(set(QUESTIONS))

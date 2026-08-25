@@ -4,7 +4,9 @@ from app.game_logic import (
     check_bingo,
     generate_board,
     get_winning_square_ids,
+    parse_custom_questions,
     toggle_square,
+    validate_questions,
 )
 from app.models import BingoLine, BingoSquareData, GameState
 
@@ -17,6 +19,9 @@ class GameSession:
     board: list[BingoSquareData] = field(default_factory=list)
     winning_line: BingoLine | None = None
     show_bingo_modal: bool = False
+    quiz_errors: list[str] = field(default_factory=list)
+    pending_custom_input: str = ""
+    used_custom_questions: bool = False
 
     @property
     def winning_square_ids(self) -> set[int]:
@@ -26,11 +31,38 @@ class GameSession:
     def has_bingo(self) -> bool:
         return self.game_state == GameState.BINGO
 
-    def start_game(self) -> None:
-        self.board = generate_board()
+    def enter_customize(self) -> None:
+        """Show the custom quiz question entry screen."""
+        self.game_state = GameState.CUSTOMIZE
+        self.quiz_errors = []
+
+    def start_game(self, raw_custom_questions: str | None = None) -> None:
+        """Start a new game.
+
+        If ``raw_custom_questions`` is blank or omitted, the default question
+        bank is used (safe fallback). If it is provided but fails validation,
+        the game stays on the customize screen with clear error messages
+        instead of starting.
+        """
+        questions: list[str] | None = None
+
+        if raw_custom_questions and raw_custom_questions.strip():
+            parsed = parse_custom_questions(raw_custom_questions)
+            errors = validate_questions(parsed)
+            if errors:
+                self.game_state = GameState.CUSTOMIZE
+                self.quiz_errors = errors
+                self.pending_custom_input = raw_custom_questions
+                return
+            questions = parsed
+
+        self.board = generate_board(questions)
         self.winning_line = None
         self.game_state = GameState.PLAYING
         self.show_bingo_modal = False
+        self.quiz_errors = []
+        self.pending_custom_input = ""
+        self.used_custom_questions = questions is not None
 
     def handle_square_click(self, square_id: int) -> None:
         if self.game_state != GameState.PLAYING:
@@ -49,6 +81,9 @@ class GameSession:
         self.board = []
         self.winning_line = None
         self.show_bingo_modal = False
+        self.quiz_errors = []
+        self.pending_custom_input = ""
+        self.used_custom_questions = False
 
     def dismiss_modal(self) -> None:
         self.show_bingo_modal = False

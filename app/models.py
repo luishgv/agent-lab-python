@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 
 class GameState(StrEnum):
     START = "start"
+    CUSTOMIZE = "customize"
     PLAYING = "playing"
     BINGO = "bingo"
 

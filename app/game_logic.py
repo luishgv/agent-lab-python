@@ -1,20 +1,80 @@
 import functools
 import random
 
-from app.data import FREE_SPACE, QUESTIONS
+from app.data import (
+    FREE_SPACE,
+    MAX_QUESTION_LENGTH,
+    MIN_QUESTION_LENGTH,
+    QUESTIONS,
+    REQUIRED_QUESTION_COUNT,
+)
 from app.models import BingoLine, BingoSquareData
 
 BOARD_SIZE = 5
 CENTER_INDEX = 12  # 5x5 grid, center is index 12 (row 2, col 2)
 
 
-def generate_board() -> list[BingoSquareData]:
-    """Generate a new 5x5 bingo board."""
-    questions = iter(random.sample(QUESTIONS, 24))
+def parse_custom_questions(raw_text: str) -> list[str]:
+    """Parse newline-separated question text into a cleaned, de-duplicated list.
+
+    Blank lines are dropped, surrounding whitespace is stripped, and
+    duplicate questions (case-insensitive) are removed while preserving the
+    order in which they first appeared.
+    """
+    seen: set[str] = set()
+    questions: list[str] = []
+    for line in raw_text.splitlines():
+        text = line.strip()
+        if not text:
+            continue
+        key = text.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        questions.append(text)
+    return questions
+
+
+def validate_questions(questions: list[str]) -> list[str]:
+    """Validate custom questions and return a list of error messages.
+
+    An empty list of errors means the questions are valid and can be used
+    to generate a board.
+    """
+    errors: list[str] = []
+
+    if len(questions) < REQUIRED_QUESTION_COUNT:
+        errors.append(
+            f"Enter at least {REQUIRED_QUESTION_COUNT} unique questions "
+            f"(got {len(questions)})."
+        )
+
+    if any(len(q) < MIN_QUESTION_LENGTH for q in questions):
+        errors.append(
+            f"Each question must be at least {MIN_QUESTION_LENGTH} characters long."
+        )
+
+    if any(len(q) > MAX_QUESTION_LENGTH for q in questions):
+        errors.append(
+            f"Each question must be at most {MAX_QUESTION_LENGTH} characters long."
+        )
+
+    return errors
+
+
+def generate_board(questions: list[str] | None = None) -> list[BingoSquareData]:
+    """Generate a new 5x5 bingo board.
+
+    Uses the provided question pool when given (must contain at least
+    ``REQUIRED_QUESTION_COUNT`` questions), otherwise falls back to the
+    default question bank.
+    """
+    pool = questions if questions else QUESTIONS
+    sampled = iter(random.sample(pool, REQUIRED_QUESTION_COUNT))
     return [
         BingoSquareData(id=i, text=FREE_SPACE, is_marked=True, is_free_space=True)
         if i == CENTER_INDEX
-        else BingoSquareData(id=i, text=next(questions))
+        else BingoSquareData(id=i, text=next(sampled))
         for i in range(BOARD_SIZE * BOARD_SIZE)
     ]
 

@@ -19,7 +19,7 @@
         {% endif %}
 
         <section class="board-stage" aria-label="Bingo board">
-            <div class="board-meta"><span>CONNECTIONS</span><span>{{ session.board|selectattr('is_marked')|list|length - 1 }} / 24 MARKED</span></div>
+            <div class="board-meta"><span>CONNECTIONS{% if session.used_custom_questions %} · CUSTOM QUIZ{% endif %}</span><span>{{ session.board|selectattr('is_marked')|list|length - 1 }} / 24 MARKED</span></div>
             {% include "components/bingo_board.html" %}
             <div class="board-caption"><span>FREE SPACE IS ALWAYS ON</span><span>5 × 5 GRID</span></div>
         </section>

@@ -54,6 +54,14 @@ h1 em, .game-intro em { color: var(--cyan); font-style: normal; }
 .arcade-cta b { font-size: 1.4rem; font-weight: 600; }
 .arcade-cta:hover { background: var(--lime); box-shadow: 7px 7px 0 var(--coral); transform: translate(-3px, -3px); }
 .landing-footnote { margin: 16px 0 0; color: rgba(244, 241, 232, .48); font-size: .65rem; text-align: center; }
+.quiz-link { margin-top: 10px; text-align: center; }
+.quiz-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+.quiz-textarea { width: 100%; padding: 16px; color: var(--paper); background: #171d23; border: 1px solid var(--line); font-family: var(--mono); font-size: .8rem; line-height: 1.6; resize: vertical; }
+.quiz-textarea:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.quiz-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.quiz-actions .arcade-cta { width: auto; flex: 1 1 240px; }
+.quiz-errors { margin-bottom: 4px; padding: 14px 16px; color: var(--ink); background: var(--coral); font-size: .72rem; line-height: 1.6; }
+.quiz-errors ul { margin: 0; padding-left: 18px; }
 .reveal { animation: reveal .7s both; }
 .reveal-one { animation-delay: .05s; } .reveal-two { animation-delay: .15s; } .reveal-three { animation-delay: .25s; } .reveal-four { animation-delay: .35s; }
 

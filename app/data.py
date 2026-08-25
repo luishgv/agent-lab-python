@@ -2,6 +2,11 @@ from typing import Final
 
 FREE_SPACE: Final = "FREE SPACE"
 
+# A standard 5x5 board has 24 playable squares (the center is the free space).
+REQUIRED_QUESTION_COUNT: Final = 24
+MIN_QUESTION_LENGTH: Final = 3
+MAX_QUESTION_LENGTH: Final = 100
+
 QUESTIONS: Final[list[str]] = [
     "bikes to work",
     "has lived in another country",
