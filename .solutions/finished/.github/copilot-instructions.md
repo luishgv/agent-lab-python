@@ -52,3 +52,16 @@ Uses custom CSS utility classes (Tailwind-like) in `app/static/css/app.css`:
 - `GameSession` manages game state server-side
 - State persisted via signed cookies (itsdangerous)
 - HTMX handles partial page updates without full reloads
+
+## Design Guide
+
+When changing the frontend:
+
+- Preserve the existing Jinja2 component structure, HTMX interactions, and utility-class approach.
+- Design for the actual social bingo workflow: make the board, current state, and next action immediately scannable.
+- Use distinctive typography and a deliberate color palette with CSS variables; avoid default system fonts, purple-on-white gradients, and interchangeable dashboard layouts.
+- Build atmosphere with restrained patterns, gradients, or contextual shapes instead of relying on a flat background. Keep cards limited to repeated items, modals, and genuinely framed tools.
+- Add a small number of meaningful CSS animations for page-load or state changes, while respecting `prefers-reduced-motion`.
+- Keep controls keyboard accessible with visible focus states, clear labels, adequate contrast, and touch-friendly target sizes.
+- Use stable responsive dimensions for the 5x5 board so labels, icons, and marked states never shift the layout on mobile or desktop.
+- Verify that text remains inside its containers and that adjacent controls do not overlap at narrow widths.
