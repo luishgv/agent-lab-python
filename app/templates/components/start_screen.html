@@ -1,32 +1,52 @@
 <div id="game-container">
-    <main class="landing-shell">
-        <div class="landing-noise" aria-hidden="true"></div>
-        <div class="landing-inner">
-            <header class="brand-lockup reveal reveal-one">
-                <span class="brand-mark">SO</span>
-                <span class="brand-label">SOC OPS / SOCIAL BINGO</span>
+    <main class="start-shell">
+        <div class="start-inner">
+            <header class="start-brand">
+                <span class="start-mark" aria-hidden="true">
+                    <span class="start-mark-dot start-mark-dot-a"></span>
+                    <span class="start-mark-dot start-mark-dot-b"></span>
+                </span>
+                <span class="start-kicker">Soc Ops &middot; Social Bingo</span>
             </header>
 
-            <section class="landing-hero reveal reveal-two">
-                <p class="eyebrow">A room full of possibilities</p>
-                <h1>Find your<br><em>people.</em></h1>
-                <p class="hero-copy">A pocket-sized icebreaker for making real connections, one square at a time.</p>
+            <section class="start-hero">
+                <p class="start-eyebrow">An icebreaker, reimagined</p>
+                <h1 class="start-title">Meet the room,<br><em>one match at a time.</em></h1>
+                <p class="start-copy">Soc Ops turns small talk into real conversation. Fill your board by finding people who match each prompt.</p>
             </section>
 
-            <div class="landing-rule reveal reveal-three"><span>HOW TO PLAY</span><span class="rule-line"></span><span>01 / 03</span></div>
-            <section class="how-to-panel reveal reveal-three" aria-labelledby="how-to-title">
-                <h2 id="how-to-title">How to play</h2>
-                <ol>
-                    <li><span>01</span><strong>Spot a match</strong><small>Find someone who fits a square.</small></li>
-                    <li><span>02</span><strong>Make a connection</strong><small>Ask, listen, and tap it in.</small></li>
-                    <li><span>03</span><strong>Claim your line</strong><small>Five in a row means bingo.</small></li>
+            <section class="start-steps" aria-labelledby="how-to-title">
+                <h2 id="how-to-title" class="start-steps-title">How to play</h2>
+                <ol class="start-steps-list">
+                    <li>
+                        <span class="start-step-index" aria-hidden="true">1</span>
+                        <div class="start-step-body">
+                            <strong>Spot a match</strong>
+                            <p>Scan your board for a prompt that fits someone nearby.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="start-step-index" aria-hidden="true">2</span>
+                        <div class="start-step-body">
+                            <strong>Start a conversation</strong>
+                            <p>Walk up, ask, and mark the square once it's confirmed.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="start-step-index" aria-hidden="true">3</span>
+                        <div class="start-step-body">
+                            <strong>Claim your line</strong>
+                            <p>Five matches in a row, across or diagonal, wins.</p>
+                        </div>
+                    </li>
                 </ol>
             </section>
 
-            <button hx-post="/start" hx-target="#game-container" hx-swap="outerHTML" class="arcade-cta reveal reveal-four">
-                <span>Start Game</span><b aria-hidden="true">↗</b>
+            <button hx-post="/start" hx-target="#game-container" hx-swap="outerHTML" class="start-cta">
+                <span>Start Game</span>
+                <span class="start-cta-icon" aria-hidden="true">&rarr;</span>
             </button>
-            <p class="landing-footnote reveal reveal-four">Built for curious rooms &amp; unexpected conversations.</p>
+            <p class="start-footnote">Built for curious rooms &amp; unexpected conversations.</p>
         </div>
     </main>
 </div>
