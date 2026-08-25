@@ -1,0 +1,14 @@
+{  
+  "servers": {
+    "microsoft/playwright-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest",
+        "--browser=msedge",
+        "--headless",
+        "--no-sandbox"
+      ]
+    }
+  }
+}

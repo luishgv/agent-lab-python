@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+.venv/
+venv/
+
+# uv
+uv.lock
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Ruff
+.ruff_cache/
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.json
+
+# Editor directories and files
+.idea
+.DS_Store
+*.sw?
+.playwright-mcp
+
+# Local
+*.local
+_site/

@@ -1,0 +1,114 @@
+# Part 2: Design-First Frontend
+
+[📚 Lab Guide](https://copilot-dev-days.github.io/agent-lab-python/docs/) • [← Part 1](01-setup.md)
+
+---
+
+> ⏱️ **Time:** ~15 minutes
+
+Now that your repo context is engineered, let's get creative! You'll redesign the entire UI using AI-assisted development.
+
+---
+
+## 🎨 Task 1: Make It Yours
+
+Use the **Plan agent** to start any bigger work item. Iterate on the plan (2+ times!) with tweaks and clarifications.
+
+### Steps
+
+1. In the **chat mode dropdown** (bottom-left of the chat input), select **Plan**
+2. Make sure the **session type dropdown** shows **Local** (if your previous session was Cloud, switch it back)
+3. Enter your vision:
+   ```
+   Let's do a full redesign. Make it [YOUR THEME]
+   ```
+4. Review the generated plan
+5. Ask for adjustments until you're happy
+6. Click **Start Implementation** to execute
+
+### 🎭 Theme Ideas
+
+Pick one that speaks to you:
+
+| Category | Themes |
+|----------|--------|
+| **Minimal** | Minimalist Mono, Scandinavian Calm, Desert Sand Minimal |
+| **Retro** | Retro Terminal Green, Pixel Arcade Style, Vaporwave Sunset |
+| **Dark** | Cyberpunk Neon, Dark Mode Noir, Space Galaxy Glow |
+| **Playful** | Playful Candy Pop, Toybox Primary Colors, Anime Bubble |
+| **Professional** | Corporate Clean Blue, Gradient Glass UI, Metallic Chrome |
+| **Creative** | Brutalist Blocks, Geometric Memphis, Bold Constructivist |
+| **Cozy** | Cozy Coffee Shop, Soft Pastel Clouds, Notebook Doodle |
+| **Unique** | Skeuomorphic Stickers, Paper Card Cutouts, Chalkboard |
+
+✅ **Result:** Frontend and CSS utility instructions combine to build a beautiful design.
+
+---
+
+## 📝 Task 2: Keep Instructions Updated
+
+When you make major architecture, design, or dependency changes, update your instructions!
+
+### Steps
+
+1. After your redesign, follow up:
+   ```
+   Add a design guide section to copilot-instructions.md
+   ```
+2. Review the changes
+3. **Commit and push**
+
+---
+
+## 🚀 Task 3: Scale Exploration with Cloud Agents
+
+Generate multiple design variations in parallel using cloud agents.
+
+> **If you have Copilot Pro, Business, or Enterprise:**
+>
+> 1. In the **chat mode dropdown** (bottom-left of the chat input), select **Plan**
+> 2. Enter:
+>    ```
+>    Redesign the start screen as a more engaging landing page
+>    ```
+> 3. Note the variations suggested in the plan
+> 4. Run the exploration prompt:
+>    ```
+>    /cloud-explore design variations
+>    ```
+>    📄 See `.github/prompts/cloud-explore.prompt.md`
+>
+> 5. Check **Agent Sessions** to track the 3 new cloud agents
+> 6. Click any session to follow progress or open in web
+
+> **If you're on the free tier (no Cloud access):**
+>
+> 1. Use **Autopilot** mode or a local **Plan** session to explore one design variation at a time
+> 2. In the **chat mode dropdown** (bottom-left of the chat input), select **Plan**
+> 3. Enter:
+>    ```
+>    Redesign the start screen as a more engaging landing page
+>    ```
+> 4. Review and implement the plan, then repeat with a different direction
+
+### What's Happening
+
+The prompt spins up **3 parallel cloud agents**, each exploring a different design direction. They'll:
+- Create branches
+- Implement variations
+- Take screenshots
+- Open PRs for your review
+
+✅ **Result:** 3 design variations to compare, all running in parallel!
+
+> ⏰ These take a few minutes. Continue to Part 3 while they run.
+
+---
+
+## ✅ Part 2 Complete!
+
+You've learned how to:
+- Use the Plan agent for complex design tasks
+- Iterate on plans before implementing
+- Keep instructions updated with changes
+- Scale exploration with parallel cloud agents

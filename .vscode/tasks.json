@@ -1,0 +1,42 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "python: run",
+			"type": "shell",
+			"command": "uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
+			"isBackground": true,
+			"problemMatcher": {
+				"pattern": {
+					"regexp": "."
+				},
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "^.*Started.*",
+					"endsPattern": "^.*Application startup complete.*"
+				}
+			},
+			"presentation": {
+				"reveal": "never"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "python: test",
+			"type": "shell",
+			"command": "uv run pytest",
+			"group": "test",
+			"problemMatcher": []
+		},
+		{
+			"label": "python: lint",
+			"type": "shell",
+			"command": "uv run ruff check .",
+			"group": "test",
+			"problemMatcher": []
+		}
+	]
+}

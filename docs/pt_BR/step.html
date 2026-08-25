@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LSC44NDPLQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LSC44NDPLQ');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VS Code GitHub Copilot Agent Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="alternate" hreflang="en" href="https://copilot-dev-days.github.io/agent-lab-python/">
+    <link rel="alternate" hreflang="pt-BR" href="https://copilot-dev-days.github.io/agent-lab-python/pt_BR/">
+    <link rel="alternate" hreflang="es" href="https://copilot-dev-days.github.io/agent-lab-python/es/">
+    <link rel="alternate" hreflang="x-default" href="https://copilot-dev-days.github.io/agent-lab-python/">
+    <link rel="stylesheet" href="../step.css">
+    <link rel="stylesheet" href="../light-theme.css">
+    <script src="../theme-toggle.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="header-brand">
+                <span>🎮</span>
+                <span class="header-title">VS Code Copilot Agent Lab</span>
+            </a>
+            <nav class="header-nav">
+                <div class="locale-picker" id="localePicker">
+                    <button type="button" class="locale-toggle" aria-haspopup="listbox" aria-expanded="false" aria-label="Selecionar idioma">🌐</button>
+                    <ul role="listbox" aria-label="Idioma">
+                        <li role="option" data-locale="en" aria-selected="false">🇬🇧 English</li>
+                        <li role="option" data-locale="es" aria-selected="false">🇪🇸 Español</li>
+                        <li role="option" data-locale="pt-BR" aria-selected="true" class="active">🇧🇷 Português (Brasil)</li>
+                    </ul>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">☀️ Claro</button>
+                <button class="nav-btn" id="prevBtn" disabled>← Anterior</button>
+                <button class="nav-btn" id="nextBtn">Próximo →</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Partes do Lab</div>
+                <nav id="stepNav"></nav>
+            </div>
+        </aside>
+
+        <main class="main">
+            <article class="content">
+                <div id="markdown-content" class="markdown">
+                    <div class="loading">Carregando conteúdo</div>
+                </div>
+                <nav class="nav-footer">
+                    <a href="#" class="nav-footer-btn disabled" id="prevLink">← Anterior</a>
+                    <a href="#" class="nav-footer-btn" id="nextLink">Próximo →</a>
+                </nav>
+            </article>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script>
+        // Define all steps in order
+        const steps = [
+            { id: 'guide', file: 'GUIDE.md', title: 'Referência Rápida', number: '📚' },
+            { id: '00-overview', file: '00-overview.md', title: 'Visão Geral & Checklist', number: '00' },
+            { id: '01-setup', file: '01-setup.md', title: 'Configuração & Engenharia de Contexto', number: '01' },
+            { id: '02-design', file: '02-design.md', title: 'Frontend Design-First', number: '02' },
+            { id: '03-quiz-master', file: '03-quiz-master.md', title: 'Quiz Master Personalizado', number: '03' },
+            { id: '04-multi-agent', file: '04-multi-agent.md', title: 'Desenvolvimento Multi-Agente', number: '04' },
+            { id: '05-complete', file: '05-complete.md', title: '🎉 Completo!', number: '🎉' },
+        ];
+
+        // Confetti celebration function
+        function celebrate() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+
+            const colors = ['#00f5ff', '#ff00ff', '#b366ff', '#00ff88', '#ffff00'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Big confetti burst
+        function bigCelebrate() {
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#00f5ff', '#ff00ff', '#b366ff', '#00ff88', '#ffff00']
+            });
+        }
+
+        // Konami Code Easter Egg: ↑↑↓↓←→←→BA
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.code === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    konamiIndex = 0;
+                    triggerEpicExplosion();
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        // Epic emoji explosion!
+        function triggerEpicExplosion() {
+            const emojis = ['🚀', '⭐', '🎮', '💜', '🔥', '✨', '🎯', '💻', '🤖', '🧠', '🎨', '🏆', '👾', '🌟', '💎', '🦄'];
+            
+            // Screen flash
+            const flash = document.createElement('div');
+            flash.style.cssText = `
+                position: fixed;
+                inset: 0;
+                background: linear-gradient(135deg, #00f5ff, #ff00ff);
+                z-index: 9999;
+                animation: flashBang 0.5s ease-out forwards;
+            `;
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+
+            // Add flash animation
+            if (!document.getElementById('konami-styles')) {
+                const style = document.createElement('style');
+                style.id = 'konami-styles';
+                style.textContent = `
+                    @keyframes flashBang {
+                        0% { opacity: 1; }
+                        100% { opacity: 0; }
+                    }
+                    @keyframes emojiExplode {
+                        0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; }
+                        50% { opacity: 1; }
+                        100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(var(--rot)); opacity: 0; }
+                    }
+                    @keyframes epicShake {
+                        0%, 100% { transform: translateX(0); }
+                        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                        20%, 40%, 60%, 80% { transform: translateX(10px); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Shake the page
+            document.body.style.animation = 'epicShake 0.5s ease-in-out';
+            setTimeout(() => document.body.style.animation = '', 500);
+
+            // Spawn emoji explosion from center
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const emoji = document.createElement('div');
+                    const angle = (Math.PI * 2 * i) / 50 + Math.random() * 0.5;
+                    const distance = 200 + Math.random() * 400;
+                    const tx = Math.cos(angle) * distance;
+                    const ty = Math.sin(angle) * distance - 100;
+                    
+                    emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    emoji.style.cssText = `
+                        position: fixed;
+                        left: 50%;
+                        top: 50%;
+                        font-size: ${30 + Math.random() * 40}px;
+                        z-index: 10000;
+                        pointer-events: none;
+                        --tx: ${tx}px;
+                        --ty: ${ty}px;
+                        --rot: ${Math.random() * 720 - 360}deg;
+                        animation: emojiExplode 1.5s ease-out forwards;
+                    `;
+                    document.body.appendChild(emoji);
+                    setTimeout(() => emoji.remove(), 1500);
+                }, i * 20);
+            }
+
+            // Multiple confetti bursts
+            const burstCount = 5;
+            for (let i = 0; i < burstCount; i++) {
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 360,
+                        origin: { x: Math.random(), y: Math.random() * 0.5 + 0.25 },
+                        colors: ['#00f5ff', '#ff00ff', '#b366ff', '#00ff88', '#ffff00', '#ff6b6b'],
+                        ticks: 300,
+                        gravity: 0.8,
+                        scalar: 1.2
+                    });
+                }, i * 200);
+            }
+
+            // Console message
+            console.log('%c🎮 KONAMI CODE ACTIVATED! 🎮', 'font-size: 24px; color: #ff00ff; text-shadow: 0 0 10px #00f5ff;');
+            console.log('%c↑↑↓↓←→←→BA', 'font-size: 16px; color: #00f5ff;');
+        }
+
+        // Base URL for fetching markdown - use local files when served locally, GitHub raw for production
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const GITHUB_RAW_BASE = isLocal
+            ? '../../workshop/pt_BR/'
+            : 'https://raw.githubusercontent.com/copilot-dev-days/agent-lab-python/main/workshop/pt_BR/';
+
+        // Get current step from URL
+        function getCurrentStepId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('step') || '00-overview';
+        }
+
+        function getCurrentStepIndex() {
+            const stepId = getCurrentStepId();
+            return steps.findIndex(s => s.id === stepId);
+        }
+
+        // Build sidebar navigation
+        function buildSidebar() {
+            const nav = document.getElementById('stepNav');
+            const currentId = getCurrentStepId();
+            
+            nav.innerHTML = steps.map(step => `
+                <a href="?step=${step.id}" class="step-link ${step.id === currentId ? 'active' : ''}">
+                    <span class="step-number">${step.number}</span>
+                    <span>${step.title}</span>
+                </a>
+            `).join('');
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            const idx = getCurrentStepIndex();
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const prevLink = document.getElementById('prevLink');
+            const nextLink = document.getElementById('nextLink');
+
+            // Header buttons
+            prevBtn.disabled = idx <= 0;
+            nextBtn.disabled = idx >= steps.length - 1;
+
+            prevBtn.onclick = () => idx > 0 && (window.location.search = `?step=${steps[idx - 1].id}`);
+            nextBtn.onclick = () => idx < steps.length - 1 && (window.location.search = `?step=${steps[idx + 1].id}`);
+
+            // Footer links
+            if (idx > 0) {
+                prevLink.href = `?step=${steps[idx - 1].id}`;
+                prevLink.textContent = `← ${steps[idx - 1].title}`;
+                prevLink.classList.remove('disabled');
+            } else {
+                prevLink.classList.add('disabled');
+                prevLink.textContent = '← Anterior';
+            }
+
+            if (idx < steps.length - 1) {
+                nextLink.href = `?step=${steps[idx + 1].id}`;
+                nextLink.textContent = `${steps[idx + 1].title} →`;
+                nextLink.classList.remove('disabled');
+            } else {
+                nextLink.classList.add('disabled');
+                nextLink.textContent = 'Próximo →';
+            }
+        }
+
+        // Process markdown - clean up navigation links and fix paths
+        function processMarkdown(md) {
+            // Remove the header navigation bar (we have our own sidebar)
+            md = md.replace(/\[🎮 Live Demo\][^\n]+\n+---/g, '');
+            md = md.replace(/\[🎮 Live Demo\][^\n]+/g, '');
+            
+            // Remove footer navigation (we have our own)
+            md = md.replace(/---\s*\n\s*\[🎮 Live Demo\][^\n]+\n\s*👉[^\n]+/g, '');
+            md = md.replace(/👉 \*\*\[Continue to[^\n]+/g, '');
+            md = md.replace(/👉 \*\*\[Start with[^\n]+/g, '');
+            
+            // Convert internal markdown links to step viewer links
+            md = md.replace(/\]\((\d+)-([^)]+)\.md\)/g, '](step.html?step=$1-$2)');
+            md = md.replace(/\]\(GUIDE\.md\)/g, '](step.html?step=guide)');
+            
+            // Handle GitHub-style alerts
+            md = md.replace(/>\s*\[!NOTE\]\s*\n/gi, '> **📝 Nota**\n>\n');
+            md = md.replace(/>\s*\[!TIP\]\s*\n/gi, '> **💡 Dica**\n>\n');
+            md = md.replace(/>\s*\[!IMPORTANT\]\s*\n/gi, '> **⚠️ Importante**\n>\n');
+            md = md.replace(/>\s*💡\s*\*\*Tip:\*\*/gi, '> **💡 Dica**');
+
+            // Clean up multiple consecutive horizontal rules
+            md = md.replace(/---\s*\n\s*---/g, '---');
+            
+            return md;
+        }
+
+        // Load and render markdown
+        async function loadContent() {
+            const idx = getCurrentStepIndex();
+            if (idx === -1) {
+                document.getElementById('markdown-content').innerHTML = '<p>Passo não encontrado. <a href="?step=00-overview">Ir para Visão Geral</a></p>';
+                return;
+            }
+
+            const step = steps[idx];
+            document.title = `${step.title} | VS Code Copilot Agent Lab`;
+
+            try {
+                const response = await fetch(`${GITHUB_RAW_BASE}${step.file}`);
+                if (!response.ok) throw new Error('Failed to load');
+                
+                let md = await response.text();
+                md = processMarkdown(md);
+
+                // Fix relative image paths to resolve against the markdown file's directory
+                const stepDir = step.file.substring(0, step.file.lastIndexOf('/') + 1);
+                md = md.replace(/!\[([^\]]*)\]\((?!https?:\/\/|\/\/)([^)]+)\)/g, (match, alt, path) => {
+                    const cleanPath = path.replace(/^\.\//, '');
+                    return `![${alt}](${GITHUB_RAW_BASE}${stepDir}${cleanPath})`;
+                });
+                
+                // Configure marked
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true
+                });
+
+                document.getElementById('markdown-content').innerHTML = marked.parse(md);
+
+                // If this is the completion page, add confetti!
+                if (step.id === '05-complete') {
+                    // Trigger celebration on load
+                    setTimeout(celebrate, 500);
+                    
+                    // Add the confetti button
+                    const btnContainer = document.getElementById('confetti-btn-container');
+                    if (btnContainer) {
+                        btnContainer.innerHTML = `
+                            <button onclick="bigCelebrate()" style="
+                                background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+                                color: var(--bg-dark);
+                                border: none;
+                                padding: 1rem 2rem;
+                                font-size: 1.25rem;
+                                font-weight: 700;
+                                border-radius: 12px;
+                                cursor: pointer;
+                                margin: 1rem 0;
+                                transition: transform 0.2s, box-shadow 0.2s;
+                            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 10px 40px rgba(0,245,255,0.4)';" 
+                               onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                                🎊 Mais Confetti! 🎊
+                            </button>
+                        `;
+                    }
+                }
+            } catch (error) {
+                document.getElementById('markdown-content').innerHTML = `
+                    <h1>Erro ao Carregar Conteúdo</h1>
+                    <p>Não foi possível carregar ${step.file}. Por favor, verifique sua conexão com a internet.</p>
+                    <p><a href="index.html">Voltar para a página inicial</a></p>
+                `;
+            }
+        }
+
+        // Initialize
+        buildSidebar();
+        updateNavigation();
+        loadContent();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const idx = getCurrentStepIndex();
+            if (e.key === 'ArrowLeft' && idx > 0) {
+                window.location.search = `?step=${steps[idx - 1].id}`;
+            } else if (e.key === 'ArrowRight' && idx < steps.length - 1) {
+                window.location.search = `?step=${steps[idx + 1].id}`;
+            }
+        });
+    </script>
+
+    <script>
+    (function(){
+      var match=location.pathname.match(/\/(pt_BR|es)\//);
+      var locale=match?match[1]:'en';
+      var picker=document.getElementById('localePicker');
+      if(!picker)return;
+      var btn=picker.querySelector('.locale-toggle'),list=picker.querySelector('ul');
+      list.querySelectorAll('li').forEach(function(li){
+        var l=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
+        if(l===locale){li.classList.add('active');li.setAttribute('aria-selected','true');}
+        else{li.classList.remove('active');li.setAttribute('aria-selected','false');}
+      });
+      function open(){list.style.display='block';btn.setAttribute('aria-expanded','true');}
+      function close(){list.style.display='none';btn.setAttribute('aria-expanded','false');}
+      btn.addEventListener('click',function(e){e.stopPropagation();list.style.display==='block'?close():open();});
+      document.addEventListener('click',close);
+      document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+      list.querySelectorAll('li').forEach(function(li){
+        li.addEventListener('click',function(e){
+          e.stopPropagation();
+          var t=li.dataset.locale==='pt-BR'?'pt_BR':li.dataset.locale;
+          if(t===locale){close();return;}
+          var p=location.pathname;
+          if(locale!=='en')p=p.replace(new RegExp('/'+locale+'/'),'/');;
+          if(t!=='en'){var base=p.replace(/\/index\.html$/,'/');if(!base.endsWith('/'))base+='/';p=base+t+'/';}
+          localStorage.setItem('preferred-locale',t);
+          window.location.href=p;
+        });
+      });
+    })();
+    </script>
+</body>
+</html>

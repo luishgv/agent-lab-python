@@ -1,0 +1,29 @@
+{
+  "chat.customAgentInSubagent.enabled": true,
+  "scm.repositories.selectionMode": "single",
+  "chat.promptFilesRecommendations": {
+    "setup": "resourceFilename == 'README.md'"
+  },
+  "chat.tools.terminal.autoApprove": {
+    "uv run uvicorn": true,
+    "uv run pytest": true,
+    "uv run ruff": true,
+    "uv sync": true
+  },
+  "github.copilot.chat.githubMcpServer.enabled": true,
+  "github.copilot.chat.githubMcpServer.toolsets": [
+    "repos,issues,pull_requests,code_search,copilot,web_search"
+  ],
+  "chat.viewTitle.enabled": true,
+  "chat.viewSessions.enabled": true,
+  "github.copilot.chat.cli.customAgents.enabled": true,
+  "scm.repositories.explorer": true,
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  }
+}
